@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,8 +19,8 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping()
-    public ResponseEntity<List<BookDto>> getAll(@RequestParam(required = false) GetBooksInVO dto) {
-        return new ResponseEntity<>(bookService.getAllBooks(dto), HttpStatus.OK);
+    public ResponseEntity<List<BookDto>> getAll(GetBooksInVO vo) {
+        return new ResponseEntity<>(bookService.getAllBooks(vo), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -28,7 +29,7 @@ public class BookController {
     }
 
     @PostMapping()
-    public ResponseEntity<BookDto> createBook(@RequestBody CreateBookInVO inVO) {
+    public ResponseEntity<BookDto> createBook(@RequestBody @Valid CreateBookInVO inVO) {
         return new ResponseEntity<>(bookService.createBook(inVO), HttpStatus.CREATED);
     }
 
