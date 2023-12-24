@@ -1,6 +1,7 @@
 package com.hoang2001giang.Libra.book.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

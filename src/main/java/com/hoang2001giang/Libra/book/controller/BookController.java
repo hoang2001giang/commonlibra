@@ -6,8 +6,10 @@ import com.hoang2001giang.Libra.book.dto.GetBooksInVO;
 import com.hoang2001giang.Libra.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,7 +31,8 @@ public class BookController {
     }
 
     @PostMapping()
-    public ResponseEntity<BookDto> createBook(@RequestBody @Valid CreateBookInVO inVO) {
+    public ResponseEntity<BookDto> createBook(@RequestBody CreateBookInVO inVO) {
+
         return new ResponseEntity<>(bookService.createBook(inVO), HttpStatus.CREATED);
     }
 
