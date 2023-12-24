@@ -42,6 +42,7 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .requestMatchers(new RegexRequestMatcher("/api/auth/register", "POST")).permitAll()
                 .antMatchers("/api/auth/login").permitAll()
+                .antMatchers("/api/products/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
