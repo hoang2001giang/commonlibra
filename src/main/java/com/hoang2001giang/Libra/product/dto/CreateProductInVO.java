@@ -3,6 +3,8 @@ package com.hoang2001giang.Libra.product.dto;
 import com.hoang2001giang.Libra.product.data.Product;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CreateProductInVO {
     private String slug;
@@ -14,7 +16,7 @@ public class CreateProductInVO {
     private String sellingPrice;
     private String description;
     private String thumbnail;
-    private String images;
+    private List<String> images;
     private String category;
     private String status;
     private String note;

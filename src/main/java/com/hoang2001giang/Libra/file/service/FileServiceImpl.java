@@ -24,7 +24,7 @@ public class FileServiceImpl implements FileService{
         FileEntity createdFile = new FileEntity();
         BeanUtils.copyProperties(inVO, createdFile);
         createdFile.setPath(path);
-//        fileRepository.save(createdFile);
+        fileRepository.save(createdFile);
         return entityToDto(createdFile);
     }
 

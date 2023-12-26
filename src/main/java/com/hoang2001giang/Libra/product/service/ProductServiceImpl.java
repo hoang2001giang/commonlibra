@@ -2,6 +2,8 @@ package com.hoang2001giang.Libra.product.service;
 
 import com.hoang2001giang.Libra.category.data.Category;
 import com.hoang2001giang.Libra.category.data.CategoryRepository;
+import com.hoang2001giang.Libra.file.data.FileEntity;
+import com.hoang2001giang.Libra.file.data.FileRepository;
 import com.hoang2001giang.Libra.product.data.Product;
 import com.hoang2001giang.Libra.product.data.ProductRepository;
 import com.hoang2001giang.Libra.product.dto.CreateProductInVO;
@@ -10,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    FileRepository fileRepository;
 
     @Override
     public List<ProductDto> getAll() {
@@ -27,11 +32,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductDto create(CreateProductInVO vo) {
         Product createdProduct = new Product();
         BeanUtils.copyProperties(vo, createdProduct);
+
         Category category = categoryRepository.getByName(vo.getCategory()).orElseThrow();
         createdProduct.setCategory(category);
+
+        List<FileEntity> files = fileRepository.findAllById(vo.getImages());
+        createdProduct.setImages(files);
+
         productRepository.save(createdProduct);
         return entityToDto(createdProduct);
     }
@@ -39,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDto entityToDto(Product entity) {
         ProductDto dto = new ProductDto();
         BeanUtils.copyProperties(entity, dto);
+        dto.setCategory(entity.getCategory().getName());
         return dto;
     }
 

@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +16,11 @@ public class FileEntity {
     @Id
     private String id = UUID.randomUUID().toString();
     private String path;
-    private String mappedEntity;
+    @Enumerated(EnumType.STRING)
+    private Entity mappedEntity;
     private String objectId;
+
+    public enum Entity {
+        PRODUCT, CATEGORY
+    }
 }

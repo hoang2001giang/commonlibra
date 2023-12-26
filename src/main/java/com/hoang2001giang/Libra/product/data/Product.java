@@ -2,6 +2,7 @@ package com.hoang2001giang.Libra.product.data;
 
 import com.hoang2001giang.Libra.auth.data.User;
 import com.hoang2001giang.Libra.category.data.Category;
+import com.hoang2001giang.Libra.file.data.FileEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,8 +33,9 @@ public class Product {
     private String description;
     @Column(columnDefinition = "TEXT")
     private String thumbnail;
-    @Column(columnDefinition = "TEXT")
-    private String images;
+    @OneToMany
+    @JoinColumn(name="fileIds")
+    private List<FileEntity> images;
     private String status;
     @Column(columnDefinition = "TEXT")
     private String note;
