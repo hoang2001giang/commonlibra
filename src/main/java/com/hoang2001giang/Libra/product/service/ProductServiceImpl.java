@@ -7,6 +7,7 @@ import com.hoang2001giang.Libra.file.data.FileRepository;
 import com.hoang2001giang.Libra.product.data.Product;
 import com.hoang2001giang.Libra.product.data.ProductRepository;
 import com.hoang2001giang.Libra.product.dto.CreateProductInVO;
+import com.hoang2001giang.Libra.product.dto.GetProductInVO;
 import com.hoang2001giang.Libra.product.dto.ProductDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
-
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
@@ -37,14 +37,41 @@ public class ProductServiceImpl implements ProductService {
         Product createdProduct = new Product();
         BeanUtils.copyProperties(vo, createdProduct);
 
-        Category category = categoryRepository.getByName(vo.getCategory()).orElseThrow();
+        Category category = categoryRepository.findByName(vo.getCategory()).orElseThrow();
         createdProduct.setCategory(category);
 
         List<FileEntity> files = fileRepository.findAllById(vo.getImages());
-        createdProduct.setImages(files);
+        for (FileEntity file: files) {
+            file.setObjectId(createdProduct.getId());
+            file.setMappedEntity(FileEntity.Entity.PRODUCT);
+        }
+        fileRepository.saveAll(files);
 
         productRepository.save(createdProduct);
-        return entityToDto(createdProduct);
+        ProductDto dto = entityToDto(createdProduct);
+        dto.setImages(files);
+        return dto;
+    }
+
+    @Override
+    public ProductDto getOne(String id) {
+        Product product = productRepository.findById(id).orElseThrow();
+        List<FileEntity> files = fileRepository
+                .findByMappedEntityAndObjectId(FileEntity.Entity.PRODUCT, id);
+        ProductDto dto = entityToDto(product);
+        dto.setImages(files);
+        return dto;
+    }
+
+    @Override
+    public ProductDto getOne(GetProductInVO vo) {
+        Category category = categoryRepository.findByName(vo.getCategory()).orElseThrow();
+        Product product = productRepository.findFirstBySlugAndCategory(vo.getSlug(), category).orElseThrow();
+        List<FileEntity> files = fileRepository
+                .findByMappedEntityAndObjectId(FileEntity.Entity.PRODUCT, product.getId());
+        ProductDto dto = entityToDto(product);
+        dto.setImages(files);
+        return dto;
     }
 
     private ProductDto entityToDto(Product entity) {

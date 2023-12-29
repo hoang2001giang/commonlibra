@@ -33,9 +33,6 @@ public class Product {
     private String description;
     @Column(columnDefinition = "TEXT")
     private String thumbnail;
-    @OneToMany
-    @JoinColumn(name="fileIds")
-    private List<FileEntity> images;
     private String status;
     @Column(columnDefinition = "TEXT")
     private String note;
